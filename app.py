@@ -289,7 +289,7 @@ def get_test_results(app_id):
     """ Gets the number of passed and failed tests for an app from last time tests were run """
     app = App.query.filter_by(id=app_id).first()
     if app is not None:
-        successes, total = app.get_latest_results
+        successes, total = app.get_latest_results()
          
         data = {
             'success': successes,
