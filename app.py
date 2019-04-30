@@ -16,7 +16,6 @@ import threading
 from thread_timer import PerpetualTimer
 from flask import Flask, request
 from db import db, App, Test, Result, MethodType
-from sqlalchemy import func
 
 app = Flask(__name__)
 db_filename = 'database.db'
@@ -290,26 +289,11 @@ def get_test_results(app_id):
     """ Gets the number of passed and failed tests for an app from last time tests were run """
     app = App.query.filter_by(id=app_id).first()
     if app is not None:
-        tests = app.tests 
-        # results = [db.session.query(func.max(Result.createdAt)).filter_by(id=test.id).first() for test in tests]
-        results = []
-        for test in tests:
-            # Get latest test belonging to app
-            subqry = db.session.query(func.max(Result.createdAt)).filter(Result.test_id == test.id)
-            result = db.session.query(Result).filter(Result.test_id == test.id, Result.createdAt == subqry)
-            results.append(result.first())
-
-        # Handle tests that have no results (treat as "success")
-        successes = 0
-        for result in results:
-            if result is None:
-                successes += 1
-            else:
-                successes += result.success
+        successes, total = app.get_latest_results
          
         data = {
             'success': successes,
-            'total': len(tests)
+            'total': total 
         }
         return json.dumps({'success': True, 'data': data}), 200
 
@@ -329,7 +313,6 @@ def get_historical_data(test_id):
 #--- Not networking
 
 # Periodic run tests on everything
-# @app.route('/api/testing/test/everything/')
 def test_apps():
     with app.app_context():
         tests = Test.query.all()
@@ -337,7 +320,6 @@ def test_apps():
             successful, result_obj = run_test(test)
             db.session.add(result_obj) 
         db.session.commit()
-    # return json.dumps({'wow':None}), 201
 
 
 # Running Tests
@@ -372,8 +354,6 @@ def run_test(test, log_data=True):
         return result_bool, result
     else:
         return result_bool
-
-# Run Test periodically every ??? time period
 
 # Testing
 def test_the_tester():

@@ -13,6 +13,7 @@ __author__ = "Phillip O'Reggio"
 from flask_sqlalchemy import SQLAlchemy
 import enum
 import requests
+from sqlalchemy import func
 
 db = SQLAlchemy()
 
@@ -72,14 +73,39 @@ class App(Base):
         self.updatedAt = kwargs['updatedAt']
 
     def serialize(self):
+        checksPassed, totalChecks = self.get_latest_results()
         return {
             'id': self.id,
             'name': self.name,
             'icon': self.icon,
-            'tests': [test.serialize() for test in self.tests],
+            'totalChecks': checksPassed,
+            'numChecksPassed': totalChecks,
             'createdAt': self.createdAt,
             'updatedAt': self.updatedAt
         }
+
+    def get_latest_results(self):
+        """
+        Returns a tuple of the number of tests passed, and the total number of tests
+        """
+        tests = self.tests 
+
+        results = []
+        for test in tests:
+            # Get latest test belonging to app
+            subqry = db.session.query(func.max(Result.createdAt)).filter(Result.test_id == test.id)
+            result = db.session.query(Result).filter(Result.test_id == test.id, Result.createdAt == subqry)
+            results.append(result.first())
+
+        # Handle tests that have no results (treat as "success")
+        successes = 0
+        for result in results:
+            if result is None:
+                successes += 1
+            else:
+                successes += result.success
+
+        return successes, len(tests)
 
 class Test(Base):
     """
