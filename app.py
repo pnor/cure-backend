@@ -121,8 +121,6 @@ def initialize_empty():
     
     db.session.commit()
 
-
-
 # @app.route('/api/delete/everything/')
 def delete_everything():
     """ Deletes all tables and the data it contains """

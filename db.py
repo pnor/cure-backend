@@ -14,6 +14,9 @@ import enum
 import requests
 import time
 from sqlalchemy import func
+import bcrypt
+import datetime
+import hashlib
 
 db = SQLAlchemy()
 
@@ -56,6 +59,58 @@ class Base(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     createdAt = db.Column(db.Integer, nullable=False)
     updatedAt = db.Column(db.Integer, nullable=False)
+
+class User(Base):
+    """
+    SQLAlchemy Represenation of a User. Stores Username, password, and tokens
+    """
+    __tablename__ = 'user'
+    # User Info
+    email = db.Column(db.String, nullable=False)
+    password_digest = db.Column(db.String, nullable=False)
+    # Tokens
+    session_token = db.Column(db.String, nullable=False, unique=True)
+    expiration_token = db.Column(db.DateTime, nullable=False, unique=True)
+    update_token = db.Column(db.String, nullable=False, unique=True)
+
+    def __init__(self, **kwargs):
+        self.email = kwargs['email']
+        self.password_digest= bcrypt.haspw(kwargs['password'].encode('utf8'), bcrypt.gensalt(rounds=13))
+        self.email = kwargs['createdAt']
+        self.email = kwargs['updatedAt']
+        self.renew_session()
+
+    def renew_session(self):
+        """
+        Generates new session, expiration, and update tokens for a user
+        """
+        self.session_token = self._urlsafe_base_64()
+        self.expiration_token = datetime.datetime.now() + datetime.timedelta(days=1)
+        self.update_token = self._urlsafe_base_64()
+
+    def _urlsafe_base_64(self):
+        """
+        Generates session/update tokens
+        """
+        return hashlib.sha1(os.urandom(64)).hexdigest()
+
+    def verify_password(self, password):
+        """
+        Verifies a user's password
+        """
+        return bcrypt.checkpw(password.encode('utf8'), self.password_digest) 
+
+    def verify_session_token(self, session_token):
+        """
+        Verifies a user's session token
+        """
+        return session_token == self.session_token and datetime.datetime.now() < self.expiration_token 
+
+    def verify_update_token(self, update_token):
+        """
+        Verifies a user's update token
+        """
+        return update_token == self.update_token
 
 class App(Base):
     """
