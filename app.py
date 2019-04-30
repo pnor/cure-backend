@@ -209,7 +209,7 @@ def get_all_tests():
     return json.dumps(res), 200
 
 # Get all Tests for an app
-@app.route('/api/test/<int:app_id>/')
+@app.route('/api/tests/<int:app_id>/')
 def get_all_tests_for_app(app_id):
     """ Get all tests for an app at id """
     app = App.query.filter_by(id=app_id).first()
@@ -274,6 +274,8 @@ def get_test_results_now(app_id):
             successful, result_obj = run_test(test)
             successes.append(successful)
             db.session.add(result_obj) 
+        # Update updatedAt
+        app.updatedAt = int(time.time())
         db.session.commit()
         data = {
             'success': sum(successes),
@@ -319,13 +321,18 @@ def test_apps():
         for test in tests:
             successful, result_obj = run_test(test)
             db.session.add(result_obj) 
+
+        apps = App.query.all()
+        unix_time = int(time.time())
+        for a in apps:
+            a.updatedAt = unix_time
         db.session.commit()
 
 
 # Running Tests
 def run_test(test, log_data=True):
     """
-    Runs a test stored in the database. 
+    Runs a test stored in the database.
     Return: Tuple. First element is a boolean that is True if passed with an "OK" error code,
      False otherwise. Second is the Result object to be stored in the database.
      If log_data is False, it will only return the boolean (no tuple)
