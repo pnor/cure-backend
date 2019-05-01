@@ -14,7 +14,8 @@ import threading
 import time
 import datetime
 from flask import Flask, request
-from db import db, App, Test, Result, MethodType
+from db import db, App, Test, Result, User, MethodType
+import user_dao
 
 app = Flask(__name__)
 db_filename = 'database.db'
@@ -172,6 +173,63 @@ def clear_results():
     db.session.commit()
     return json.dumps({'success': True, 'data': 'Results cleared'}), 200
 
+
+
+
+
+
+
+
+#--- Auth
+def extract_token(request):
+    auth_header = request.headers.get('Authorization')
+    if auth_header is None:
+        return False, json.dumps({'error': 'Missing authorization header.'}), 401
+
+    bearer_token = auth_header.replace('Bearer', '').strip()
+    if bearer_token is not None:
+        return False, json.dumps({'error': 'Invalid authorization header.'})
+
+    return True, bearer_token
+    
+    
+@app.route('/register/', methods=['POST'])
+def register():
+    post_body = json.loads(request.data)
+    email = post_body['email']
+    password = post_body['password']
+
+    if email is None or password is None:
+        return json.dumps({'error': 'Invalid username or password'}), 404
+
+    created, user = user_dao.create_user(email, password)
+
+    if not created:
+        return json.dumps({'error': 'User already exists'}), 404
+
+    return json.dumps({
+        'session_token': user.session_token,
+        'session_expiration': user.session_expiration,
+        'update_token': user.update_token
+    }), 201
+
+@app.route('/login/', methods=['POST'])
+def login():
+    pass
+
+@app.route('/???/', methods=['POST'])
+def dunno():
+    pass
+
+
+
+
+
+
+
+
+
+
 #--- App
 
 # Get all Apps
@@ -219,6 +277,13 @@ def delete_app(app_id):
         return json.dumps({'success': True, 'data': deleted_app.serialize()}), 200
 
     return json.dumps({'success': False, 'data': 'App not found'}), 404
+
+
+
+
+
+
+
 
 #--- Test
 
@@ -281,6 +346,12 @@ def delete_test(test_id):
 
     return json.dumps({'success': False, 'data': 'Test not found'}), 404
 
+
+
+
+
+
+
 #--- Results
 
 # Get all Results for an App (Numeric, Now)
@@ -335,6 +406,11 @@ def get_historical_data(test_id):
         return json.dumps({'success': False, 'data': res}), 200
 
     return json.dumps({'success': False, 'data': 'Test not found'}), 404
+
+
+
+
+
 
 #--- Not networking
 
