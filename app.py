@@ -10,10 +10,11 @@ Hack Challenge.
 """
 __author__ = "Phillip O'Reggio"
 
+import constants
 import json
-import time
 import threading
-from thread_timer import PerpetualTimer
+import time
+import datetime
 from flask import Flask, request
 from db import db, App, Test, Result, MethodType
 
@@ -43,7 +44,7 @@ def initialize_empty():
     curTime = int(time.time())
     app1 = App(
         name = 'Eatery',
-        icon = 'https://github.com/cuappdev/assets/blob/master/app-icons/Eatery-83.5x83.5%402x.png',
+        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Eatery-83.5x83.5%402x.png',
         createdAt = curTime,
         updatedAt = curTime
     ) 
@@ -63,7 +64,7 @@ def initialize_empty():
     curTime = int(time.time())
     app2 = App(
         name = 'Uplift',
-        icon = 'https://github.com/cuappdev/assets/blob/master/app-icons/Uplift-83.5x83.5%402x.png',
+        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Uplift-83.5x83.5%402x.png',
         createdAt = curTime,
         updatedAt = curTime
     )
@@ -83,7 +84,7 @@ def initialize_empty():
     curTime = int(time.time())
     app3 = App(
         name = 'Transit',
-        icon = 'https://github.com/cuappdev/assets/blob/master/app-icons/Transit-83.5x83.5%402x.png',
+        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Transit-83.5x83.5%402x.png',
         createdAt = curTime,
         updatedAt = curTime
     )
@@ -103,7 +104,7 @@ def initialize_empty():
     curTime = int(time.time())
     app4 = App(
         name = 'Pollo',
-        icon = 'https://github.com/cuappdev/assets/blob/master/app-icons/pollo-1024%401x.png',
+        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/pollo-1024%401x.png',
         createdAt = curTime,
         updatedAt = curTime
     )
@@ -147,8 +148,6 @@ def clear_results():
     db.session.query(Result).delete()
     db.session.commit()
     return json.dumps({'success': True, 'data': 'Results cleared'}), 200
-
-
 
 #--- App
 
@@ -276,10 +275,11 @@ def get_test_results_now(app_id):
             db.session.add(result_obj) 
         # Update updatedAt
         app.updatedAt = int(time.time())
+
         db.session.commit()
         data = {
             'success': sum(successes),
-            'total': len(tests)
+            'total': len(tests) if len(tests) != 0 else 1 # Prevent this from being 0
         }
         return json.dumps({'success': True, 'data': data}), 200
 
@@ -306,7 +306,7 @@ def get_test_results(app_id):
 def get_historical_data(test_id):
     test = Test.query.filter_by(id=test_id).first()
     if test is not None:
-        results = test.results
+        results = test.results[-constants.MAX_RESULTS:]
         res = [result.serialize() for result in results]
         return json.dumps({'success': False, 'data': res}), 200
 
@@ -316,17 +316,41 @@ def get_historical_data(test_id):
 
 # Periodic run tests on everything
 def test_apps():
+    """
+    Tests every test contained by each app and stores the results. Is called periodically
+    """
     with app.app_context():
+        # Run tests
         tests = Test.query.all()
         for test in tests:
             successful, result_obj = run_test(test)
             db.session.add(result_obj) 
 
+        # Update apps
         apps = App.query.all()
         unix_time = int(time.time())
         for a in apps:
             a.updatedAt = unix_time
+            
         db.session.commit()
+
+def exec_every_n_seconds(n,f):
+    """
+    Executes a method every n seconds (using a single thread, accounting for time drift)
+    https://stackoverflow.com/questions/8600161/executing-periodic-actions-in-python/20169930#20169930
+    """
+    first_called=datetime.datetime.now()
+    f()
+    num_calls=1
+    drift= datetime.timedelta()
+    time_period=datetime.timedelta(seconds=n)
+    while 1:
+        time.sleep(n-drift.microseconds/1000000.0)
+        current_time = datetime.datetime.now()
+        f()
+        num_calls += 1
+        difference = current_time - first_called
+        drift = difference - time_period* num_calls
 
 
 # Running Tests
@@ -385,9 +409,8 @@ if __name__ == '__main__':
             initialize_empty()
 
     # Setup Periodic Tests
-    interval = 300 # Seconds --> 30 minutes
-    test_timer = PerpetualTimer(interval, test_apps)
-    test_timer.start()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    threading.Thread(target=exec_every_n_seconds, args=(constants.TESTING_TIME_PERIOD, test_apps)).start()
+
+    app.run(host='0.0.0.0', port=5000, debug=False)
 elif __name__ == 'app': 
     pass

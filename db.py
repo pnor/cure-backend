@@ -11,6 +11,7 @@ Hack Challenge.
 __author__ = "Phillip O'Reggio"
 
 from flask_sqlalchemy import SQLAlchemy
+import constants
 import enum
 import requests
 import time
@@ -79,8 +80,8 @@ class App(Base):
             'id': self.id,
             'name': self.name,
             'icon': self.icon,
-            'totalChecks': checksPassed,
-            'numChecksPassed': totalChecks,
+            'totalChecks': totalChecks,
+            'numChecksPassed': checksPassed,
             'createdAt': self.createdAt,
             'updatedAt': self.updatedAt
         }
@@ -100,13 +101,14 @@ class App(Base):
 
         # Handle tests that have no results (treat as "success")
         successes = 0
+        total_tests = len(tests) if len(tests) != 0 else 1
         for result in results:
             if result is None:
                 successes += 1
             else:
                 successes += result.success
 
-        return successes, len(tests)
+        return successes, total_tests 
 
 class Test(Base):
     """
@@ -136,7 +138,7 @@ class Test(Base):
             'url': self.url,
             'method': self.method.serialize(),
             'parameters': self.parameters,
-            'results': [result.serialize() for result in self.results],
+            'results': [result.serialize() for result in self.results[-constants.MAX_RESULTS:]],
             'createdAt': self.createdAt,
             'updatedAt': self.updatedAt 
         }
