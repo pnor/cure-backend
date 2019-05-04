@@ -182,19 +182,46 @@ def clear_results():
 
 #--- Auth
 def extract_token(request):
+    """
+    Extracts the bearer token from the authorization header
+    Return : update_token or error
+    """
     auth_header = request.headers.get('Authorization')
     if auth_header is None:
-        return False, json.dumps({'error': 'Missing authorization header.'}), 401
+        return False, json.dumps({'error': 'Missing authorization header.'})
 
     bearer_token = auth_header.replace('Bearer', '').strip()
     if bearer_token is not None:
         return False, json.dumps({'error': 'Invalid authorization header.'})
 
     return True, bearer_token
-    
-    
+
+def validate_user(request):
+    """
+    Checks if a user is logged in
+    Return : True if user is valid, False otherwise and json error only if user is not properly logged in.
+    """
+    # Extract token from request
+    success, update_token = extract_token(request)
+    # Not successful: return session_token which is a json error message
+    if not success:
+        return False, update_token
+    # Get user from session token 
+    user = user_dao.get_user_by_update_token(update_token)
+    # Check if update token is valid
+    if user is None or not user.verify_update_token(update_token):
+        return False, json.dumps({'error': 'Invalid session token'})
+    # Check token expiration  
+    if not user.verify_session_token(user.session_token):
+        return False, json.dumps({'error': 'User session has expired'})
+    # No issues
+    return True, None
+
 @app.route('/register/', methods=['POST'])
 def register():
+    """
+    Registers a new user
+    """
     post_body = json.loads(request.data)
     email = post_body['email']
     password = post_body['password']
@@ -215,11 +242,51 @@ def register():
 
 @app.route('/login/', methods=['POST'])
 def login():
-    pass
+    """
+    Logs in an existing user
+    """
+    post_body = json.loads(request.data)
+    email = post_body['email'] 
+    password = post_body['password']
 
-@app.route('/???/', methods=['POST'])
-def dunno():
-    pass
+    if email is None or password is None:
+        return json.dumps({'error': 'Invalid username or password'}), 404
+
+    success, user = user_dao.verify_credentials(email, password) 
+    
+    if not success:
+        return json.dumps({'error': 'Invalid username or password'}), 400
+    
+    return json.dumps({
+        'session_token': user.session_token,
+        'expiration_token': user.expiration_token,
+        'update_token': user.update_token
+    }), 200
+
+
+@app.route('/session/', methods=['POST'])
+def update_session():
+    """
+    Updates a user's current session.
+    """
+    success, update_token = extract_token(request)
+
+    if not success:
+        return update_token, 400 
+
+    user = user_dao.get_user_by_update_token(update_token)
+    try:
+        user = user_dao.renew_session(update_token)
+    except:
+        return json.dumps({'error': 'Invalid update token'}), 400
+
+    return json.dumps({
+        'session_token': user.session_token,
+        'session_expiration' : user.expiration_token,
+        'update_token': user.update_token
+    }), 200
+
+
 
 
 
