@@ -8,15 +8,18 @@ Hack Challenge.
 """
 __author__ = "Phillip O'Reggio"
 
-from flask_sqlalchemy import SQLAlchemy
-import constants
-import enum
-import requests
-import time
-from sqlalchemy import func
-import bcrypt
 import datetime
+import enum
 import hashlib
+import os
+import time
+
+import bcrypt
+import requests
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
+
+import constants
 
 db = SQLAlchemy()
 
@@ -74,11 +77,23 @@ class User(Base):
     update_token = db.Column(db.String, nullable=False, unique=True)
 
     def __init__(self, **kwargs):
+        unix_time = int(time.time())
         self.email = kwargs['email']
-        self.password_digest= bcrypt.haspw(kwargs['password'].encode('utf8'), bcrypt.gensalt(rounds=13))
-        self.email = kwargs['createdAt']
-        self.email = kwargs['updatedAt']
+        self.password_digest= bcrypt.hashpw(kwargs['password'].encode('utf8'), bcrypt.gensalt(rounds=13))
+        self.createdAt = kwargs['createdAt']
+        self.updatedAt= kwargs['updatedAt']
         self.renew_session()
+        self.createdAt = unix_time
+        self.updatedAt = unix_time 
+
+    def serialize(self):
+        return {
+            'email': str(self.email),
+            'password_digest': str(self.password_digest),
+            'session_token': str(self.session_token),
+            'expiration_token': str(self.expiration_token),
+            'update_token': str(self.update_token)
+        }
 
     def renew_session(self):
         """
@@ -87,6 +102,7 @@ class User(Base):
         self.session_token = self._urlsafe_base_64()
         self.expiration_token = datetime.datetime.now() + datetime.timedelta(days=1)
         self.update_token = self._urlsafe_base_64()
+        self.updatedAt = int(time.time())
 
     def _urlsafe_base_64(self):
         """

@@ -1,5 +1,7 @@
-from db import db, User
 import time
+
+from db import User, db
+
 
 def get_user_by_email(email):
     return User.query.filter(User.email == email).first() 
@@ -39,7 +41,8 @@ def renew_session(update_token):
     """
     Renews a user's session
     """
-    user = user_dao.get_user_by_update_token(update_token)
+    user = get_user_by_update(update_token)
+    
     if user is not None:
         user.renew_session()
         db.session.commit()
