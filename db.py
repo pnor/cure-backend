@@ -62,7 +62,7 @@ class Base(db.Model):
 
 class User(Base):
     """
-    SQLAlchemy Represenation of a User. Stores Username, password, and tokens
+    SQLAlchemy Represention of a User. Stores Username, password, and tokens
     """
     __tablename__ = 'user'
     # User Info

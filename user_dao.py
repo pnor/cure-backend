@@ -36,11 +36,13 @@ def create_user(email, password):
     return True, user
 
 def renew_session(update_token):
-    user = get_user_by_update(update_token)
-
-    if user is None: # Update token can't exist without a user first
-        raise Exception('Invalid update token')
-
-    user.renew_session()
-    db.session.commit()
-    return user
+    """
+    Renews a user's session
+    """
+    user = user_dao.get_user_by_update_token(update_token)
+    if user is not None:
+        user.renew_session()
+        db.session.commit()
+        return user
+    # User doesn't exist
+    raise Exception('Invalid update token')
