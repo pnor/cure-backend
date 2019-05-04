@@ -8,14 +8,16 @@ Hack Challenge.
 """
 __author__ = "Phillip O'Reggio"
 
-import constants
+import datetime
 import json
 import threading
 import time
-import datetime
+
 from flask import Flask, request
-from db import db, App, Test, Result, User, MethodType
+
+import constants
 import user_dao
+from db import App, MethodType, Result, Test, User, db
 
 app = Flask(__name__)
 db_filename = 'database.db'
@@ -142,6 +144,10 @@ def clear_data():
 @app.route('/api/results/clear/', methods=['DELETE'])
 def clear_results():
     """ Clears all results from tests """
+    error = validate_user(request)
+    if error is not None:
+        return error, 401
+
     db.session.query(Result).delete()
     db.session.commit()
     return json.dumps({'success': True, 'data': 'Results cleared'}), 200
@@ -157,6 +163,7 @@ def clear_results():
 def extract_token(request):
     """
     Extracts the bearer token from the authorization header
+
     Return : update_token or error
     """
     auth_header = request.headers.get('Authorization')
@@ -164,31 +171,32 @@ def extract_token(request):
         return False, json.dumps({'error': 'Missing authorization header.'})
 
     bearer_token = auth_header.replace('Bearer', '').strip()
-    if bearer_token is not None:
+    if not bearer_token: # token != ''
         return False, json.dumps({'error': 'Invalid authorization header.'})
 
     return True, bearer_token
 
 def validate_user(request):
     """
-    Checks if a user is logged in
-    Return : True if user is valid, False otherwise and json error only if user is not properly logged in.
+    Checks if a user is logged in. Request should have session_token in Authentication header
+
+    Return : Json error or None if no issues 
     """
     # Extract token from request
-    success, update_token = extract_token(request)
+    success, session_token = extract_token(request)
     # Not successful: return session_token which is a json error message
     if not success:
-        return False, update_token
+        return session_token
     # Get user from session token 
-    user = user_dao.get_user_by_update_token(update_token)
+    user = user_dao.get_user_by_session(session_token)
     # Check if update token is valid
-    if user is None or not user.verify_update_token(update_token):
-        return False, json.dumps({'error': 'Invalid session token'})
+    if user is None:
+        return json.dumps({'error': 'Invalid session token'})
     # Check token expiration  
     if not user.verify_session_token(user.session_token):
-        return False, json.dumps({'error': 'User session has expired'})
+        return json.dumps({'error': 'User session has expired'})
     # No issues
-    return True, None
+    return None
 
 @app.route('/register/', methods=['POST'])
 def register():
@@ -209,7 +217,7 @@ def register():
 
     return json.dumps({
         'session_token': user.session_token,
-        'session_expiration': user.session_expiration,
+        'session_expiration': str(user.expiration_token),
         'update_token': user.update_token
     }), 201
 
@@ -232,22 +240,22 @@ def login():
     
     return json.dumps({
         'session_token': user.session_token,
-        'expiration_token': user.expiration_token,
-        'update_token': user.update_token
+        'session_expiration': str(user.expiration_token),
+        'update_token': str(user.update_token)
     }), 200
 
 
 @app.route('/session/', methods=['POST'])
 def update_session():
     """
-    Updates a user's current session.
+    Updates a user's current session. (update_token should be in auth header)
     """
     success, update_token = extract_token(request)
 
     if not success:
         return update_token, 400 
 
-    user = user_dao.get_user_by_update_token(update_token)
+    user = user_dao.get_user_by_update(update_token)
     try:
         user = user_dao.renew_session(update_token)
     except:
@@ -255,7 +263,7 @@ def update_session():
 
     return json.dumps({
         'session_token': user.session_token,
-        'session_expiration' : user.expiration_token,
+        'session_expiration' : str(user.expiration_token),
         'update_token': user.update_token
     }), 200
 
@@ -294,6 +302,10 @@ def get_app_at(app_id):
 @app.route('/api/apps/', methods=['POST'])
 def create_app():
     """ Creates and stores new App"""
+    error = validate_user(request)
+    if error is not None:
+        return error, 401
+
     body = json.loads(request.data)
     unix_time = int(time.time())
     new_app = App(
@@ -310,6 +322,10 @@ def create_app():
 @app.route('/api/app/<int:app_id>/', methods=['DELETE'])
 def delete_app(app_id):
     """ Deletes app at position """
+    error = validate_user(request)
+    if error is not None:
+        return error, 401
+
     deleted_app = App.query.filter_by(id=app_id).first()
     if deleted_app is not None:
         db.session.delete(deleted_app)
@@ -350,13 +366,17 @@ def get_all_tests_for_app(app_id):
 @app.route('/api/test/<int:app_id>/', methods=['POST'])
 def create_test(app_id):
     """ Create a test for app at id """
+    error = validate_user(request)
+    if error is not None:
+        return error, 401
+
     app = App.query.filter_by(id=app_id).first()
     if app is not None:
         body = json.loads(request.data)
         unix_time = int(time.time())
         test = Test(
             app_id = app.id,
-            name = body['name'] if body['name'] is not None else "",
+            name = body.get('name', ''),
             url = body['url'],
             method = MethodType(body['method']),
             parameters = body['parameters'],
@@ -374,6 +394,10 @@ def create_test(app_id):
 @app.route('/api/test/<int:test_id>/', methods=['DELETE'])
 def delete_test(test_id):
     """ Delete a specific test for an app """
+    error = validate_user(request)
+    if error is not None:
+        return error, 401
+
     test = Test.query.filter_by(id=test_id).first()
     if test is not None:
         unix_time = int(time.time())
@@ -391,6 +415,11 @@ def delete_test(test_id):
 
 
 
+
+
+
+
+
 #--- Results
 
 # Get all Results for an App (Numeric, Now)
@@ -399,6 +428,10 @@ def get_test_results_now(app_id):
     """ 
     Get the number of latest passed and failed tests for an app. Calculates it when requested.
     """
+    error = validate_user(request)
+    if error is not None:
+        return error, 401
+
     app = App.query.filter_by(id=app_id).first()
     if app is not None:
         tests = app.tests 
@@ -540,6 +573,14 @@ def test_the_tester():
     print('Testing with: ' + str(test.serialize()))
     print()
     print('Results: ' + str(run_test(test)) + '\n')
+
+# @app.route('/users/')
+def get_user():
+    """ Return all users"""
+    users = User.query.all()
+    res = {'success': True, 'data': [user.serialize() for user in users]}
+    return json.dumps(res), 200
+
 
 if __name__ == '__main__':
     # Initialize apps

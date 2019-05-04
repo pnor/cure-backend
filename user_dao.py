@@ -1,14 +1,16 @@
-from db import db, User
 import time
 
+from db import User, db
+
+
 def get_user_by_email(email):
-    User.query.filter(User.email == email).first() 
+    return User.query.filter(User.email == email).first() 
 
 def get_user_by_session(session_token):
-    User.query.filter(User.session_token == session_token).first() 
+    return User.query.filter(User.session_token == session_token).first() 
 
 def get_user_by_update(update_token):
-    User.query.filter(User.update_token == update_token).first() 
+    return User.query.filter(User.update_token == update_token).first() 
 
 def verify_credentials(email, password):
     user = get_user_by_email(email)
@@ -39,7 +41,8 @@ def renew_session(update_token):
     """
     Renews a user's session
     """
-    user = user_dao.get_user_by_update_token(update_token)
+    user = get_user_by_update(update_token)
+    
     if user is not None:
         user.renew_session()
         db.session.commit()
