@@ -1,8 +1,6 @@
 """
 File name: db.py
 Author: Phillip O'Reggio
-Date Created: 4/15/2019
-Date Last Modified: 4/28/2019
 Python Version: 3.0
 
 Specifies all methods and their endpoints. Created for the 2019 Spring Semester
