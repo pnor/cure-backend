@@ -1,3 +1,10 @@
+"""
+File name: user_dao.py
+Author: Phillip O'Reggio
+Python Version: 3.0
+
+Data Access Object for User model
+"""
 import time
 
 from db import User, db
