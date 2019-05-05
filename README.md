@@ -12,3 +12,36 @@ This backend was built using [Flask](https://flask-sqlalchemy.palletsprojects.co
 ### Run Locally
 Activate a python virtual enviroment and install necessary requirements with `pip install -r requirements.txt`. Then run with:
 ```python app.py```
+
+### Database Design
+```
+.
+└── App
+    ├── id
+    ├── name
+    ├── icon
+    ├── test(s)
+    │   ├── id
+    │   ├── name
+    │   ├── url
+    │   ├── method
+    │   ├── parameters
+    │   ├── Result(s)
+    │   │   ├── id
+    │   │   ├── success
+    │   │   ├── createdAt
+    │   │   └── updatedAt
+    │   ├── createdAt
+    │   └── updatedAt
+    ├── createdAt
+    └── updatedAt
+
+.
+└── User
+    ├── email
+    ├── password
+    ├── session_token
+    ├── expiration_token
+    └── update_token
+```
+The backend has endpoints for posting, retreiving and deletion of Apps, their Tests, and the Results of said tests. Creation and deletion of information, as well as requesting the server to run tests requires authentication, which is done through `register`, `login`, and `session` endpoints. 
