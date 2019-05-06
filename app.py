@@ -48,7 +48,7 @@ def initialize_empty():
     ) 
     db.session.add(eatery)
     eatery_test1 = Test(
-        name = 'Root Test',
+        name = 'Campus Eateries Test',
         url = 'https://eatery-backend.cornellappdev.com/',
         method = MethodType('GET'),
         parameters = 'query{eateries{name}}',
@@ -60,7 +60,7 @@ def initialize_empty():
     )
     
     eatery_test2 = Test(
-        name = 'CTown Test',
+        name = 'CTown Eateries Test',
         url = 'https://eatery-backend.cornellappdev.com/',
         method = MethodType('GET'),
         parameters = 'query{collegetownEateries{name}}',
@@ -82,7 +82,7 @@ def initialize_empty():
     )
     db.session.add(uplift)
     uplift_test1=Test(
-        name = 'Root Test',
+        name = 'Campus Gyms Test',
         url = 'http://uplift-backend.cornellappdev.com/',
         method = MethodType('GET'),
         parameters = 'query{gyms{description}}',
@@ -93,7 +93,7 @@ def initialize_empty():
         updatedAt = curTime
     )
     uplift_test2=Test(
-        name = 'Class Test',
+        name = 'Gym Classes Test',
         url = 'http://uplift-backend.cornellappdev.com/',
         method = MethodType('GET'),
         parameters = 'query{classes{id}}',
