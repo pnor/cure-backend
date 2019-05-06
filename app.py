@@ -49,9 +49,9 @@ def initialize_empty():
     db.session.add(eatery)
     eatery_test1 = Test(
         name = 'Root Test',
-        url = 'http://eatery-backend.cornellappdev.com/api/v1/',
+        url = 'https://eatery-backend.cornellappdev.com/',
         method = MethodType('GET'),
-        parameters = '{gyms{name}}',
+        parameters = 'query{eateries{name}}',
         is_graphql = True,
         results = [],
         app_id = 1,
@@ -60,8 +60,8 @@ def initialize_empty():
     )
     
     eatery_test2 = Test(
-        name = 'Class Test',
-        url = 'http://eatery-backend.cornellappdev.com/api/v1/',
+        name = 'CTown Test',
+        url = 'https://eatery-backend.cornellappdev.com/',
         method = MethodType('GET'),
         parameters = 'query{collegetownEateries{name}}',
         is_graphql = True,
@@ -83,9 +83,9 @@ def initialize_empty():
     db.session.add(uplift)
     uplift_test1=Test(
         name = 'Root Test',
-        url = 'http://uplift-backend.cornellappdev.com/api/v1/',
+        url = 'http://uplift-backend.cornellappdev.com/',
         method = MethodType('GET'),
-        parameters = 'query{gyms{description})',
+        parameters = 'query{gyms{description}}',
         is_graphql = True,
         results = [],
         app_id = 2,
@@ -94,7 +94,7 @@ def initialize_empty():
     )
     uplift_test2=Test(
         name = 'Class Test',
-        url = 'http://uplift-backend.cornellappdev.com/api/v1/',
+        url = 'http://uplift-backend.cornellappdev.com/',
         method = MethodType('GET'),
         parameters = 'query{classes{id}}',
         is_graphql = True,
@@ -395,7 +395,7 @@ def run_test(test, graphql=False, log_data=True):
         if graphql: # Make graphql request
             parameters = test.parameters
             no_whitespace = parameters.replace(' ', '').replace('\n', '').replace('\t', '')
-            endpoint + '?query=' + no_whitespace
+            endpoint = endpoint + '?query=' + no_whitespace
             parameters = '' 
         else: # normal request
             parameters = dict(test.parameters)
