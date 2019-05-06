@@ -47,104 +47,104 @@ def initialize_empty():
         updatedAt = curTime
     ) 
     db.session.add(eatery)
-    # eatery_test1 = Test(
-    #     name = 'Root Test',
-    #     url = 'http://eatery-backend.cornellappdev.com/api/v1/',
-    #     method = MethodType('GET'),
-    #     parameters = '{gyms{name}}',
-    #     is_graphql = True,
-    #     results = [],
-    #     app_id = 1,
-    #     createdAt = curTime,
-    #     updatedAt = curTime
-    # )
+    eatery_test1 = Test(
+        name = 'Root Test',
+        url = 'http://eatery-backend.cornellappdev.com/api/v1/',
+        method = MethodType('GET'),
+        parameters = '{gyms{name}}',
+        is_graphql = True,
+        results = [],
+        app_id = 1,
+        createdAt = curTime,
+        updatedAt = curTime
+    )
     
-    # eatery_test2 = Test(
-    #     name = 'Class Test',
-    #     url = 'http://eatery-backend.cornellappdev.com/api/v1/',
-    #     method = MethodType('GET'),
-    #     parameters = 'query{collegetownEateries{name}}',
-    #     is_graphql = True,
-    #     results = [],
-    #     app_id = 1,
-    #     createdAt = curTime,
-    #     updatedAt = curTime
-    # )
-    # db.session.add(eatery_test1)
-    # db.session.add(eatery_test2)
+    eatery_test2 = Test(
+        name = 'Class Test',
+        url = 'http://eatery-backend.cornellappdev.com/api/v1/',
+        method = MethodType('GET'),
+        parameters = 'query{collegetownEateries{name}}',
+        is_graphql = True,
+        results = [],
+        app_id = 1,
+        createdAt = curTime,
+        updatedAt = curTime
+    )
+    db.session.add(eatery_test1)
+    db.session.add(eatery_test2)
 
-    # curTime = int(time.time())
-    # uplift = App(
-    #     name = 'Uplift',
-    #     icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Uplift-83.5x83.5%402x.png',
-    #     createdAt = curTime,
-    #     updatedAt = curTime
-    # )
-    # db.session.add(uplift)
-    # uplift_test1=Test(
-    #     name = 'Root Test',
-    #     url = 'http://uplift-backend.cornellappdev.com/api/v1/',
-    #     method = MethodType('GET'),
-    #     parameters = 'query{gyms{description})',
-    #     is_graphql = True,
-    #     results = [],
-    #     app_id = 2,
-    #     createdAt = curTime,
-    #     updatedAt = curTime
-    # )
-    # uplift_test2=Test(
-    #     name = 'Class Test',
-    #     url = 'http://uplift-backend.cornellappdev.com/api/v1/',
-    #     method = MethodType('GET'),
-    #     parameters = 'query{classes{id}}',
-    #     is_graphql = True,
-    #     results = [],
-    #     app_id = 2,
-    #     createdAt = curTime,
-    #     updatedAt = curTime
-    # )
-    # db.session.add(uplift_test1)
-    # db.session.add(uplift_test2)
+    curTime = int(time.time())
+    uplift = App(
+        name = 'Uplift',
+        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Uplift-83.5x83.5%402x.png',
+        createdAt = curTime,
+        updatedAt = curTime
+    )
+    db.session.add(uplift)
+    uplift_test1=Test(
+        name = 'Root Test',
+        url = 'http://uplift-backend.cornellappdev.com/api/v1/',
+        method = MethodType('GET'),
+        parameters = 'query{gyms{description})',
+        is_graphql = True,
+        results = [],
+        app_id = 2,
+        createdAt = curTime,
+        updatedAt = curTime
+    )
+    uplift_test2=Test(
+        name = 'Class Test',
+        url = 'http://uplift-backend.cornellappdev.com/api/v1/',
+        method = MethodType('GET'),
+        parameters = 'query{classes{id}}',
+        is_graphql = True,
+        results = [],
+        app_id = 2,
+        createdAt = curTime,
+        updatedAt = curTime
+    )
+    db.session.add(uplift_test1)
+    db.session.add(uplift_test2)
 
-    # curTime = int(time.time())
-    # transit= App(
-    #     name = 'Transit',
-    #     icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Transit-83.5x83.5%402x.png',
-    #     createdAt = curTime,
-    #     updatedAt = curTime
-    # )
-    # db.session.add(transit)
-    # transit_test= Test(
-    #     name = 'Root Test',
-    #     url = 'http://transit-backend.cornellappdev.com/api/v1/',
-    #     method = MethodType('GET'),
-    #     parameters = '',
-    #     results = [],
-    #     app_id = 3,
-    #     createdAt = curTime,
-    #     updatedAt = curTime
-    # )
-    # db.session.add(transit_test)
+    curTime = int(time.time())
+    transit= App(
+        name = 'Transit',
+        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Transit-83.5x83.5%402x.png',
+        createdAt = curTime,
+        updatedAt = curTime
+    )
+    db.session.add(transit)
+    transit_test= Test(
+        name = 'Root Test',
+        url = 'http://transit-backend.cornellappdev.com/api/v1/',
+        method = MethodType('GET'),
+        parameters = '',
+        results = [],
+        app_id = 3,
+        createdAt = curTime,
+        updatedAt = curTime
+    )
+    db.session.add(transit_test)
 
-    # curTime = int(time.time())
-    # pollo = App(
-    #     name = 'Pollo',
-    #     icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/pollo-1024%401x.png',
-    #     createdAt = curTime,
-    #     updatedAt = curTime
-    # )
-    # db.session.add(pollo)
-    # pollo_test = Test(
-    #     name = 'Root Test',
-    #     url = 'http://transit-backend.cornellappdev.com/api/v1/',
-    #     method = MethodType('GET'),
-    #     parameters = '',
-    #     results = [],
-    #     app_id = 4,
-    #     createdAt = curTime,
-    #     updatedAt = curTime
-    # )
-    # db.session.add(pollo_test)
+    curTime = int(time.time())
+    pollo = App(
+        name = 'Pollo',
+        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/pollo-1024%401x.png',
+        createdAt = curTime,
+        updatedAt = curTime
+    )
+    db.session.add(pollo)
+    pollo_test = Test(
+        name = 'Root Test',
+        url = 'http://transit-backend.cornellappdev.com/api/v1/',
+        method = MethodType('GET'),
+        parameters = '',
+        results = [],
+        app_id = 4,
+        createdAt = curTime,
+        updatedAt = curTime
+    )
+    db.session.add(pollo_test)
     
     db.session.commit()
 
