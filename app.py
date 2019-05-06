@@ -40,87 +40,113 @@ def initialize_empty():
     Return: List of the 4 App objects and a List of 4 Test objects
     """
     curTime = int(time.time())
-    app1 = App(
+    eatery = App(
         name = 'Eatery',
         icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Eatery-83.5x83.5%402x.png',
         createdAt = curTime,
         updatedAt = curTime
     ) 
-    db.session.add(app1)
-    test1 = Test(
-        name = 'Root Test',
-        url = 'http://eatery-backend.cornellappdev.com/api/v1/',
-        method = MethodType('GET'),
-        parameters = '',
-        results = [],
-        app_id = 1,
-        createdAt = curTime,
-        updatedAt = curTime
-    )
-    db.session.add(test1)
+    db.session.add(eatery)
+    # eatery_test1 = Test(
+    #     name = 'Root Test',
+    #     url = 'http://eatery-backend.cornellappdev.com/api/v1/',
+    #     method = MethodType('GET'),
+    #     parameters = '{gyms{name}}',
+    #     is_graphql = True,
+    #     results = [],
+    #     app_id = 1,
+    #     createdAt = curTime,
+    #     updatedAt = curTime
+    # )
+    
+    # eatery_test2 = Test(
+    #     name = 'Class Test',
+    #     url = 'http://eatery-backend.cornellappdev.com/api/v1/',
+    #     method = MethodType('GET'),
+    #     parameters = 'query{collegetownEateries{name}}',
+    #     is_graphql = True,
+    #     results = [],
+    #     app_id = 1,
+    #     createdAt = curTime,
+    #     updatedAt = curTime
+    # )
+    # db.session.add(eatery_test1)
+    # db.session.add(eatery_test2)
 
-    curTime = int(time.time())
-    app2 = App(
-        name = 'Uplift',
-        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Uplift-83.5x83.5%402x.png',
-        createdAt = curTime,
-        updatedAt = curTime
-    )
-    db.session.add(app2)
-    test2 = Test(
-        name = 'Root Test',
-        url = 'http://uplift-backend.cornellappdev.com/api/v1/',
-        method = MethodType('GET'),
-        parameters = '',
-        results = [],
-        app_id = 2,
-        createdAt = curTime,
-        updatedAt = curTime
-    )
-    db.session.add(test2)
+    # curTime = int(time.time())
+    # uplift = App(
+    #     name = 'Uplift',
+    #     icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Uplift-83.5x83.5%402x.png',
+    #     createdAt = curTime,
+    #     updatedAt = curTime
+    # )
+    # db.session.add(uplift)
+    # uplift_test1=Test(
+    #     name = 'Root Test',
+    #     url = 'http://uplift-backend.cornellappdev.com/api/v1/',
+    #     method = MethodType('GET'),
+    #     parameters = 'query{gyms{description})',
+    #     is_graphql = True,
+    #     results = [],
+    #     app_id = 2,
+    #     createdAt = curTime,
+    #     updatedAt = curTime
+    # )
+    # uplift_test2=Test(
+    #     name = 'Class Test',
+    #     url = 'http://uplift-backend.cornellappdev.com/api/v1/',
+    #     method = MethodType('GET'),
+    #     parameters = 'query{classes{id}}',
+    #     is_graphql = True,
+    #     results = [],
+    #     app_id = 2,
+    #     createdAt = curTime,
+    #     updatedAt = curTime
+    # )
+    # db.session.add(uplift_test1)
+    # db.session.add(uplift_test2)
 
-    curTime = int(time.time())
-    app3 = App(
-        name = 'Transit',
-        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Transit-83.5x83.5%402x.png',
-        createdAt = curTime,
-        updatedAt = curTime
-    )
-    db.session.add(app3)
-    test3 = Test(
-        name = 'Root Test',
-        url = 'http://transit-backend.cornellappdev.com/api/v1/',
-        method = MethodType('GET'),
-        parameters = '',
-        results = [],
-        app_id = 3,
-        createdAt = curTime,
-        updatedAt = curTime
-    )
-    db.session.add(test3)
+    # curTime = int(time.time())
+    # transit= App(
+    #     name = 'Transit',
+    #     icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/Transit-83.5x83.5%402x.png',
+    #     createdAt = curTime,
+    #     updatedAt = curTime
+    # )
+    # db.session.add(transit)
+    # transit_test= Test(
+    #     name = 'Root Test',
+    #     url = 'http://transit-backend.cornellappdev.com/api/v1/',
+    #     method = MethodType('GET'),
+    #     parameters = '',
+    #     results = [],
+    #     app_id = 3,
+    #     createdAt = curTime,
+    #     updatedAt = curTime
+    # )
+    # db.session.add(transit_test)
 
-    curTime = int(time.time())
-    app4 = App(
-        name = 'Pollo',
-        icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/pollo-1024%401x.png',
-        createdAt = curTime,
-        updatedAt = curTime
-    )
-    db.session.add(app4)
-    test4 = Test(
-        name = 'Root Test',
-        url = 'http://transit-backend.cornellappdev.com/api/v1/',
-        method = MethodType('GET'),
-        parameters = '',
-        results = [],
-        app_id = 4,
-        createdAt = curTime,
-        updatedAt = curTime
-    )
-    db.session.add(test4)
+    # curTime = int(time.time())
+    # pollo = App(
+    #     name = 'Pollo',
+    #     icon = 'https://raw.githubusercontent.com/cuappdev/assets/master/app-icons/pollo-1024%401x.png',
+    #     createdAt = curTime,
+    #     updatedAt = curTime
+    # )
+    # db.session.add(pollo)
+    # pollo_test = Test(
+    #     name = 'Root Test',
+    #     url = 'http://transit-backend.cornellappdev.com/api/v1/',
+    #     method = MethodType('GET'),
+    #     parameters = '',
+    #     results = [],
+    #     app_id = 4,
+    #     createdAt = curTime,
+    #     updatedAt = curTime
+    # )
+    # db.session.add(pollo_test)
     
     db.session.commit()
-
 
 
 # @app.route('/api/delete/everything/')
@@ -230,6 +256,7 @@ def create_test(app_id):
             url = body['url'],
             method = MethodType(body['method']),
             parameters = body['parameters'],
+            is_graphql = body['is_graphql'] if body['is_graphql'] is not None else False,
             createdAt = unix_time,
             updatedAt = unix_time 
         ) 
@@ -268,7 +295,7 @@ def get_test_results_now(app_id):
         tests = app.tests 
         successes = []
         for test in tests:
-            successful, result_obj = run_test(test)
+            successful, result_obj = run_test(test, graphql=test.is_graphql)
             successes.append(successful)
             db.session.add(result_obj) 
         # Update updatedAt
@@ -321,7 +348,7 @@ def test_apps():
         # Run tests
         tests = Test.query.all()
         for test in tests:
-            successful, result_obj = run_test(test)
+            successful, result_obj = run_test(test, graphql=test.is_graphql)
             db.session.add(result_obj) 
 
         # Update apps
@@ -352,7 +379,7 @@ def exec_every_n_seconds(n,f):
 
 
 # Running Tests
-def run_test(test, log_data=True):
+def run_test(test, graphql=False, log_data=True):
     """
     Runs a test stored in the database.
     Return: Tuple. First element is a boolean that is True if passed with an "OK" error code,
@@ -364,7 +391,30 @@ def run_test(test, log_data=True):
     # Get info for test
     endpoint = test.url
     method = test.method
-    parameters = dict(test.parameters)
+    try:
+        if graphql: # Make graphql request
+            parameters = test.parameters
+            no_whitespace = parameters.replace(' ', '').replace('\n', '').replace('\t', '')
+            print('\n\n' + no_whitespace + '\n\n')
+            endpoint + '?query=' + no_whitespace
+            parameters = '' 
+        else: # normal request
+            print('\n\n' + test.parameters + '\n\n')
+            parameters = dict(test.parameters)
+    except: # Error, likely from graphql/normal request mismatch
+        # Treat as failure
+        if log_data:
+            unix_time = int(time.time())
+            result = Result(
+                test_id = test.id,
+                success = False,
+                createdAt = unix_time,
+                updatedAt = unix_time
+            )
+            return False, result
+        else:
+            return False 
+
     # Make request
     request_type = method.get_requests_method()
     response = request_type(endpoint, data=parameters)

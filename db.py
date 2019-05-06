@@ -119,6 +119,7 @@ class Test(Base):
     parameters = db.Column(db.Text, nullable=True) # Dict as String
     app_id = db.Column(db.Integer, db.ForeignKey('app.id'), nullable=False)
     results = db.relationship('Result', cascade='delete')
+    is_graphql = db.Column(db.Boolean, nullable=False)
 
     def __init__(self, **kwargs):
         self.name = kwargs['name']
@@ -126,6 +127,7 @@ class Test(Base):
         self.method = kwargs['method']
         self.parameters = kwargs['parameters']
         self.app_id = kwargs['app_id']
+        self.is_graphql = kwargs.get('is_graphql', False) 
         self.createdAt = kwargs['createdAt']
         self.updatedAt = kwargs['updatedAt']
 
@@ -137,6 +139,7 @@ class Test(Base):
             'method': self.method.serialize(),
             'parameters': self.parameters,
             'results': [result.serialize() for result in self.results[-constants.MAX_RESULTS:]],
+            'is_graphql': self.is_graphql,
             'createdAt': self.createdAt,
             'updatedAt': self.updatedAt 
         }
