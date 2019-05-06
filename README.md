@@ -1,11 +1,13 @@
 # Cure (backend)
 Your server's status is always a tap away.
 <p align="center">
-
-![Cure](https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/checkPassed.imageset/checkPassed.png) ![Cure](https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/checkCaution.imageset/checkCaution.png) ![Cure](https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/checkFailed.imageset/checkFailed.png)
-
+<img src=https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/AppIcon.appiconset/aa180h.png>
 </p>
 
+<p align="center">
+<img src=https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/checkPassed.imageset/checkPassed.png> <img src=https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/checkCaution.imageset/checkCaution.png> <img src=https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/checkFailed.imageset/checkFailed.png>
+
+</p>
 #### Cure front-end
 [Check it out Here](https://github.com/young-k/cure "Cure Frontend")
 
