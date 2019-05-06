@@ -395,11 +395,9 @@ def run_test(test, graphql=False, log_data=True):
         if graphql: # Make graphql request
             parameters = test.parameters
             no_whitespace = parameters.replace(' ', '').replace('\n', '').replace('\t', '')
-            print('\n\n' + no_whitespace + '\n\n')
             endpoint + '?query=' + no_whitespace
             parameters = '' 
         else: # normal request
-            print('\n\n' + test.parameters + '\n\n')
             parameters = dict(test.parameters)
     except: # Error, likely from graphql/normal request mismatch
         # Treat as failure
@@ -433,22 +431,6 @@ def run_test(test, graphql=False, log_data=True):
         return result_bool, result
     else:
         return result_bool
-
-# Testing
-def test_the_tester():
-    print('test this boy')
-    test = Test(
-            app_id = 2,
-            name = 'A sample, slash, root test',
-            url = 'http://transit-backend.cornellappdev.com/api/v1',
-            method = MethodType.get,
-            parameters = "",
-            createdAt = int(time.time()),
-            updatedAt = int(time.time()) 
-    ) 
-    print('Testing with: ' + str(test.serialize()))
-    print()
-    print('Results: ' + str(run_test(test)) + '\n')
 
 if __name__ == '__main__':
     # Initialize apps
