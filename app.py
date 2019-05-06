@@ -115,7 +115,7 @@ def initialize_empty():
     )
     db.session.add(transit)
     transit_test= Test(
-        name = 'Root Test',
+        name = 'Node Microservice Test',
         url = 'http://transit-backend.cornellappdev.com/api/v1/',
         method = MethodType('GET'),
         parameters = '',
@@ -256,7 +256,7 @@ def create_test(app_id):
             url = body['url'],
             method = MethodType(body['method']),
             parameters = body['parameters'],
-            is_graphql = body['is_graphql'] if body['is_graphql'] is not None else False,
+            is_graphql = body.get('is_graphql', False),
             createdAt = unix_time,
             updatedAt = unix_time 
         ) 
