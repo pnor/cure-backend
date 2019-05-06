@@ -8,6 +8,7 @@ Your server's status is always a tap away.
 <img src=https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/checkPassed.imageset/checkPassed.png> <img src=https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/checkCaution.imageset/checkCaution.png> <img src=https://raw.githubusercontent.com/young-k/cure/master/Cure/Cure/Assets.xcassets/checkFailed.imageset/checkFailed.png>
 
 </p>
+
 #### Cure front-end
 [Check it out Here](https://github.com/young-k/cure "Cure Frontend")
 
@@ -50,8 +51,4 @@ Activate a python virtual enviroment and install necessary requirements with `pi
     ├── expiration_token
     └── update_token
 ```
-<<<<<<< HEAD
-
-=======
->>>>>>> f92642803e2016f318c6865b5495cb8beb8be5ab
 The backend has endpoints for posting, retreiving and deletion of Apps, their Tests, and the Results of said tests. Creation and deletion of information, as well as requesting the server to run tests requires authentication, which is done through `register`, `login`, and `session` endpoints. 
