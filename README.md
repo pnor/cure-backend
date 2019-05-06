@@ -50,5 +50,8 @@ Activate a python virtual enviroment and install necessary requirements with `pi
     ├── expiration_token
     └── update_token
 ```
+<<<<<<< HEAD
 
+=======
+>>>>>>> f92642803e2016f318c6865b5495cb8beb8be5ab
 The backend has endpoints for posting, retreiving and deletion of Apps, their Tests, and the Results of said tests. Creation and deletion of information, as well as requesting the server to run tests requires authentication, which is done through `register`, `login`, and `session` endpoints. 

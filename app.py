@@ -607,24 +607,6 @@ def run_test(test, graphql=False, log_data=True):
     else:
         return result_bool
 
-<<<<<<< HEAD
-=======
-# Testing
-def test_the_tester():
-    print('test this boy')
-    test = Test(
-            app_id = 2,
-            name = 'A sample, slash, root test',
-            url = 'http://transit-backend.cornellappdev.com/api/v1',
-            method = MethodType.get,
-            parameters = "",
-            createdAt = int(time.time()),
-            updatedAt = int(time.time()) 
-    ) 
-    print('Testing with: ' + str(test.serialize()))
-    print()
-    print('Results: ' + str(run_test(test)) + '\n')
-
 # @app.route('/users/')
 def get_user():
     """ Return all users"""
@@ -632,8 +614,6 @@ def get_user():
     res = {'success': True, 'data': [user.serialize() for user in users]}
     return json.dumps(res), 200
 
-
->>>>>>> Finish Auth, Add auth to some endpoints, update requirements
 if __name__ == '__main__':
     # Initialize apps
     with app.app_context():
